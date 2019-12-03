@@ -1,0 +1,10 @@
+.idea
+
+client/.env
+client/build
+client/node_modules
+
+server/.env
+server/build
+server/node_modules
+server/store.sqlite
