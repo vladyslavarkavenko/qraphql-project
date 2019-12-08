@@ -6,5 +6,7 @@
   "plugins": [
     "import"
   ],
-  "rules": {}
+  "rules": {
+    "import/no-cycle": 0
+  }
 }

@@ -1,4 +1,4 @@
-import Sequelize, { Op } from 'sequelize';
+import { Sequelize } from 'sequelize';
 
 const {
   DB_NAME,
@@ -6,22 +6,19 @@ const {
   DB_PASSWORD,
 } = process.env;
 
-const store = new Sequelize(
-  DB_NAME,
-  DB_USERNAME,
-  DB_PASSWORD,
+const sequelize = new Sequelize(
   {
+    database: DB_NAME,
+    username: DB_USERNAME,
+    password: DB_PASSWORD,
+    logging: false,
     dialect: 'sqlite',
     storage: './store.sqlite',
-    operatorsAliases: {
-      $in: Op.in,
-    },
-    logging: false,
   },
 );
 
 // Test connection
-store
+sequelize
   .authenticate()
   .then(() => {
     console.log('Connection to DB has been established successfully.');
@@ -30,4 +27,4 @@ store
     console.error('Unable to connect to the DB:', err);
   });
 
-export default store;
+export default sequelize;

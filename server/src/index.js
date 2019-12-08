@@ -4,6 +4,7 @@ import { ApolloServer } from 'apollo-server';
 import CONFIG from './config';
 
 import store from './store';
+import models from './models';
 import resolvers from './resolvers';
 import UserAPI from './datasources/user';
 
@@ -24,12 +25,15 @@ const context = ({ req }) => {
   return { isAuthorized: false };
 };
 
+store.sync();
+// console.log('store', store);
+console.log('models', store.models);
 const server = new ApolloServer({
   context,
   typeDefs,
   resolvers,
   dataSources: () => ({
-    userAPI: new UserAPI({ store }),
+    userAPI: new UserAPI({ models }),
   }),
 });
 

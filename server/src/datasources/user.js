@@ -1,11 +1,37 @@
 import validator from 'validator';
 import { DataSource } from 'apollo-datasource';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+
+import CONFIG from '../config';
+
+const { JWT_SECRET } = CONFIG;
+
+// TODO: Add jwt expiration time.
+
+// Helpers
+const success = (data) => ({
+  success: true,
+  data,
+});
+const failure = (error, { log = true } = {}) => {
+  const isServerError = typeof error !== 'string';
+
+  if (log && isServerError) {
+    console.log('ERROR:', error);
+  }
+
+  return ({
+    success: false,
+    error: isServerError ? 'SERVER_ERROR' : error,
+  });
+};
 
 class UserAPI extends DataSource {
-  constructor({ store }) {
+  constructor({ models }) {
     super();
 
-    this.store = store;
+    this.models = models;
   }
 
   initialize(config) {
@@ -13,51 +39,147 @@ class UserAPI extends DataSource {
   }
 
   async createUser({ email, password, name }) {
-    const { User } = this.store;
     // TODO: Check if email is free.
-
     if (!validator.isEmail(email)) {
-      return null;
+      return failure('INVALID_DATA');
     }
 
     try {
+      const { User } = this.models;
+
       return await User.create({ email, password, name });
     } catch (err) {
-      console.log('ERR', err);
-      return null;
+      throw new Error('SERVER_ERROR');
     }
   }
 
-  async getUser() {
-    const { User } = this.store;
+  async login({ email, password }) {
+    const { User } = this.models;
+
+    const [user] = await User.findAll({
+      where: { email },
+    });
+
+    if (!user) {
+      return failure('INVALID_CREDENTIALS');
+    }
+
+    let isPassValid;
+    try {
+      isPassValid = await bcrypt.compare(password, user.password);
+    } catch (err) {
+      return failure(err);
+    }
+    if (!isPassValid) {
+      return failure('INVALID_CREDENTIALS');
+    }
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET);
+
+    return success({ user, token });
+  }
+
+  async signup({ email, password, name }) {
+    const { User } = this.models;
+
+    let user;
+    try {
+      user = await User.create({
+        name,
+        email,
+        password: await bcrypt.hash(password, 10),
+      });
+    } catch (err) {
+      failure(err);
+    }
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET);
+
+    return success({ user, token });
+  }
+
+  async getUser({ email } = {}) {
+    let user;
+    const { User } = this.models;
+
+    if (email) {
+      try {
+        [user] = await User.findAll({
+          where: { email },
+        });
+      } catch (err) {
+        return failure(err);
+      }
+    } else {
+      const { isAuthorized, userId: id } = this.context;
+
+      if (!isAuthorized) {
+        return failure('UNAUTHENTICATED');
+      }
+
+      try {
+        [user] = await User.findAll({
+          where: { id },
+        });
+      } catch (err) {
+        return failure(err);
+      }
+    }
+
+    return success(user);
+  }
+
+  async getChat(chatId) {
     const { isAuthorized, userId } = this.context;
 
     if (!isAuthorized) {
-      return null;
+      return failure('UNAUTHENTICATED');
     }
 
+    let chat;
+    let participants;
+
     try {
-      const users = await User.findAll({
+      const { Chat } = this.models;
+
+      [chat] = await Chat.findAll({
         where: {
-          id: userId,
+          id: chatId,
         },
       });
 
-      return users[0];
+      participants = await chat.getParticipants();
     } catch (err) {
-      console.log('ERR', err);
-      return null;
+      return failure(err);
     }
+
+    if (participants.findIndex(({ id }) => id === userId) === -1) {
+      return failure('PERMISSION_DENIED');
+    }
+
+    return success(chat);
   }
 
-  // async findOrCreateUser({ email: emailArg } = {}) {
-  //   const email =
-  //     this.context && this.context.user ? this.context.user.email : emailArg;
-  //   if (!email || !isEmail.validate(email)) return null;
-  //
-  //   const users = await this.store.User.findOrCreate({ where: { email } });
-  //   return users && users[0] ? users[0] : null;
-  // }
+  async createChat({
+    name, img, anonymous = true, participants,
+  }) {
+    const { isAuthorized, userId } = this.context;
+
+    if (!isAuthorized) {
+      return failure('UNAUTHENTICATED');
+    }
+
+    try {
+      const { Chat } = this.models;
+
+      const chat = await Chat.create({ name, img, anonymous });
+
+      await chat.setOwner(userId);
+      await chat.setParticipants([...new Set([...participants, userId].map((a) => +a))]);
+
+      return success(chat);
+    } catch (err) {
+      return failure(err);
+    }
+  }
 }
 
 export default UserAPI;

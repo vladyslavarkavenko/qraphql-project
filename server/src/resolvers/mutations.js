@@ -1,37 +1,19 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+const login = async (_, {
+  email, password,
+}, { dataSources: { userAPI } }) => userAPI.login({
+  email, password,
+});
 
-import CONFIG from '../config';
+const signup = async (_, {
+  email, password, name,
+}, { dataSources: { userAPI } }) => userAPI.signup({
+  email, password, name,
+});
 
-const { JWT_SECRET } = CONFIG;
+const createChat = async (_, {
+  name, img, anonymous, participants,
+}, { dataSources: { userAPI } }) => userAPI.createChat({
+  name, img, anonymous, participants,
+});
 
-async function signup(_, { email, password, name }, { dataSources: { userAPI } }) {
-  const user = await userAPI.createUser({
-    name,
-    email,
-    password: await bcrypt.hash(password, 10),
-  });
-
-  // TODO: Add jwt expiration time.
-  const token = jwt.sign({ userId: user.id }, JWT_SECRET);
-
-  return { token, user };
-}
-
-export async function login(_, { email, password }, { dataSources: { userAPI } }) {
-  const user = await userAPI.getUser({ email });
-  if (!user) {
-    throw new Error('No user found');
-  }
-
-  const valid = await bcrypt.compare(password, user.password);
-  if (!valid) {
-    throw new Error('Invalid password');
-  }
-
-  const token = jwt.sign({ userId: user.id }, JWT_SECRET);
-
-  return { token, user };
-}
-
-export default { login, signup };
+export default { login, signup, createChat };

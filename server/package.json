@@ -16,7 +16,7 @@
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix"
   },
-  "husky": {
+  "_husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
@@ -36,7 +36,7 @@
     "graphql": "^14.5.8",
     "jsonwebtoken": "^8.5.1",
     "sequelize": "^5.21.2",
-    "sqlite3": "^4.1.0",
+    "sqlite3": "^4.1.1",
     "validator": "^12.1.0"
   },
   "devDependencies": {

@@ -1,5 +1,11 @@
-async function password() {
+function password() {
   return 'PRIVATE DATA';
 }
 
-export default { password };
+async function chats(_, __, { dataSources: { userAPI } }) {
+  const user = await userAPI.getUser();
+
+  return user.getChats();
+}
+
+export default { password, chats };
