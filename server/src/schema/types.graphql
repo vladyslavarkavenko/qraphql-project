@@ -1,0 +1,8 @@
+scalar DATE
+
+enum AttachmantType {
+    IMAGE,
+    AUDIO,
+    VIDEO,
+    DOCUMENT
+}

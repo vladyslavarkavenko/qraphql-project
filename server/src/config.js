@@ -1,21 +1,13 @@
-import dotenv from 'dotenv';
+import { config } from 'dotenv';
 
-dotenv.config();
+config();
 
-const {
-  PORT = '4000',
-  NODE_ENV = 'development',
-  JWT_SECRET = 'secret',
-  DB_NAME = 'database',
-  DB_USERNAME = 'username',
-  DB_PASSWORD = 'password',
-} = process.env;
+const { env } = process;
 
-export default {
-  PORT,
-  NODE_ENV,
-  JWT_SECRET,
-  DB_NAME,
-  DB_USERNAME,
-  DB_PASSWORD,
-};
+export const PORT = env.PORT || '4000';
+export const DB_NAME = env.DB_NAME || 'database';
+export const JWT_SECRET = env.JWT_SECRET || 'secret';
+export const JWT_EXPIRES_IN = env.JWT_EXPIRES_IN || 24 * 60 * 60 * 1000;
+// export const NODE_ENV = process.env.NODE_ENV || 'development';
+export const DB_USERNAME = env.DB_USERNAME || 'username';
+export const DB_PASSWORD = env.DB_PASSWORD || 'password';

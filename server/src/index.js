@@ -1,42 +1,19 @@
-import jwt from 'jsonwebtoken';
 import { ApolloServer } from 'apollo-server';
 
-import CONFIG from './config';
-
-import store from './store';
-import models from './models';
+import { context } from './helpers';
+import typeDefs from './schema';
 import resolvers from './resolvers';
-import UserAPI from './datasources/user';
+import dataSources from './dataSources';
 
-import typeDefs from './schema.graphql';
+import { PORT } from './config';
 
-const { PORT, JWT_SECRET } = CONFIG;
-
-const context = ({ req }) => {
-  const Authorization = req.get('Authorization');
-
-  if (Authorization) {
-    const token = Authorization.replace('Bearer ', '');
-    const { userId } = jwt.verify(token, JWT_SECRET);
-
-    return { isAuthorized: true, userId };
-  }
-
-  return { isAuthorized: false };
-};
-
-store.sync();
-// console.log('store', store);
-console.log('models', store.models);
 const server = new ApolloServer({
   context,
   typeDefs,
   resolvers,
-  dataSources: () => ({
-    userAPI: new UserAPI({ models }),
-  }),
+  dataSources,
 });
 
-server.listen({ port: PORT }).then(({ url }) => {
-  console.log(`🚀Server running at ${url}`);
-});
+server
+  .listen({ port: PORT })
+  .then(({ url }) => console.log(`🚀Server running: ${url}`));

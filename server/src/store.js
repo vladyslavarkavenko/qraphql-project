@@ -1,10 +1,9 @@
 import { Sequelize } from 'sequelize';
-
-const {
+import {
   DB_NAME,
   DB_USERNAME,
   DB_PASSWORD,
-} = process.env;
+} from './config';
 
 const sequelize = new Sequelize(
   {

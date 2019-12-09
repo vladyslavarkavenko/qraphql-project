@@ -4,6 +4,8 @@ import sequelize from '../store';
 
 const { STRING, BOOLEAN } = DataTypes;
 
+const modelName = 'Chat';
+
 class Chat extends Model {}
 Chat.init({
   name: {
@@ -16,6 +18,9 @@ Chat.init({
     type: BOOLEAN,
     allowNull: false,
   },
-}, { sequelize, modelName: 'Chat' });
+}, {
+  sequelize,
+  modelName,
+});
 
 export default Chat;

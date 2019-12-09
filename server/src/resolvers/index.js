@@ -1,15 +1,11 @@
 import Query from './queries';
+import Objects from './objects';
 import Mutation from './mutations';
-
-import User from './objects/user';
-import Chat from './objects/chat';
-
-import DATE from './customScalars/date';
+import CustomScalars from './customScalars';
 
 export default {
   Query,
   Mutation,
-  User,
-  Chat,
-  DATE,
+  ...Objects,
+  ...CustomScalars,
 };

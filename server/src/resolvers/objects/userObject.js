@@ -2,8 +2,8 @@ function password() {
   return 'PRIVATE DATA';
 }
 
-async function chats(_, __, { dataSources: { userAPI } }) {
-  const user = await userAPI.getUser();
+async function chats(_, __, { dataSources: { UserAPI } }) {
+  const user = await UserAPI.getUser();
 
   return user.getChats();
 }
