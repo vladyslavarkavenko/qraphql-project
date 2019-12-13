@@ -15,11 +15,11 @@ class ChatAPI extends DataSource {
     this.ctx = config.context;
   }
 
-  async getChat(chatId) {
+  async get(chatId) {
     return this.checkChatPermissions(chatId);
   }
 
-  async createChat(name, img, anonymous, participants) {
+  async create(name, img, anonymous, participants) {
     let chat;
     const { Chat } = this.models;
     const userId = checkAuth(this.ctx);
@@ -38,7 +38,7 @@ class ChatAPI extends DataSource {
     return chat;
   }
 
-  async updateChat(chatId, name, img, anonymous, participants) {
+  async update(chatId, name, img, anonymous, participants) {
     const userId = checkAuth(this.ctx);
 
     const chat = await this.checkChatPermissions(chatId, true);
@@ -58,10 +58,16 @@ class ChatAPI extends DataSource {
     return chat;
   }
 
-  async deleteChat(chatId) {
-    const chat = await this.checkChatPermissions(chatId, true);
+  async delete(chatId) {
+    const chat = await this.checkMsgPermissions(chatId, true);
 
-    return !!await chat.destroy();
+    try {
+      await chat.destroy();
+    } catch (err) {
+      TE(err);
+    }
+
+    return chat;
   }
 }
 

@@ -13,6 +13,6 @@ export const signup = async (_, {
 
 export const updateUser = async (_, {
   email, name,
-}, { dataSources: { UserAPI } }) => UserAPI.updateUser({
+}, { dataSources: { UserAPI } }) => UserAPI.update({
   email, name,
 });

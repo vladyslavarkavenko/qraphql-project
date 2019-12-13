@@ -9,11 +9,11 @@ type Mutation {
     login(email: String!, password: String!): AuthPayload!
     signup(email: String!, password: String!, name: String!): AuthPayload!
     # Chat
-    deleteChat(chatId: ID!): Boolean!
+    deleteChat(chatId: ID!): Chat!
     createChat(name: String, img: String, anonymous: Boolean, participants: [ID]!): Chat!
     updateChat(chatId: ID!, name: String, img: String, anonymous: Boolean, participants: [ID]): Chat!
     # Message
-    deleteMessage(msgId: ID!): Boolean!
+    deleteMessage(msgId: ID!): Message!
     updateMessage(msgId: ID!, text: String!, attachment: String, attachmentType: AttachmantType): Message!
     createMessage(text: String!, chatId: ID!, attachment: String, attachmentType: AttachmantType): Message!
 }

@@ -17,7 +17,7 @@ class UserAPI extends DataSource {
     this.ctx = config.context;
   }
 
-  async getUser(userId, email) {
+  async get(userId, email) {
     let user;
     const { User } = this.models;
 
@@ -44,7 +44,7 @@ class UserAPI extends DataSource {
     return user;
   }
 
-  async updateUser({ email, name }) {
+  async update({ email, name }) {
     let user;
     const { User } = this.models;
     const id = checkAuth(this.ctx);

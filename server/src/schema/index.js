@@ -3,5 +3,8 @@ import models from './models.graphql';
 import queries from './queries.graphql';
 import mutations from './mutations.graphql';
 import connections from './connections.graphql';
+import subscriptions from './subscriptions.graphql';
 
-export default [types, models, connections, queries, mutations].join('\n');
+const schema = [types, models, connections, queries, mutations, subscriptions].join('\n');
+
+export default schema;

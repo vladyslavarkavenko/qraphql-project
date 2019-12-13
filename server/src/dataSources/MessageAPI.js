@@ -3,7 +3,6 @@ import { DataSource } from 'apollo-datasource';
 import { TE } from '../utils';
 import { checkAuth, checkMsgPermissions, checkChatPermissions } from './helpers';
 
-
 class MessageAPI extends DataSource {
   constructor({ models }) {
     super();
@@ -17,7 +16,7 @@ class MessageAPI extends DataSource {
     this.ctx = config.context;
   }
 
-  async getMessage(msgId) {
+  async get(msgId) {
     const userId = checkAuth(this.ctx);
     const message = await this.checkMsgPermissions(msgId);
 
@@ -31,7 +30,7 @@ class MessageAPI extends DataSource {
     return message;
   }
 
-  async createMessage(text, chatId, attachment, attachmentType) {
+  async create(text, chatId, attachment, attachmentType) {
     let message;
     const { Message } = this.models;
     const userId = checkAuth(this.ctx);
@@ -51,7 +50,7 @@ class MessageAPI extends DataSource {
     return message;
   }
 
-  async updateMessage(msgId, text, attachment, attachmentType) {
+  async update(msgId, text, attachment, attachmentType) {
     const message = await this.checkMsgPermissions(msgId, true);
 
     try {
@@ -65,10 +64,16 @@ class MessageAPI extends DataSource {
     return message;
   }
 
-  async deleteMessage(msgId) {
+  async delete(msgId) {
     const message = await this.checkMsgPermissions(msgId, true);
 
-    return !!await message.destroy();
+    try {
+      await message.destroy();
+    } catch (err) {
+      TE(err);
+    }
+
+    return message;
   }
 }
 

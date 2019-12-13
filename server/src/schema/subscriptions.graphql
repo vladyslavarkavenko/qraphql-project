@@ -1,0 +1,10 @@
+type Subscription {
+    # Chat
+    chatCreated: Chat!,
+    chatUpdated: Chat!,
+    chatDeleted: Chat!,
+    # Message
+    messageCreated(chatId: ID): Message!,
+    messageUpdated(chatId: ID): Message!,
+    messageDeleted(chatId: ID): Message!,
+}

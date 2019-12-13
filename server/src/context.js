@@ -1,14 +1,15 @@
 import { jwt } from './utils';
 
-const context = ({ req }) => {
+const authHeader = 'Authorization';
+
+const context = ({ req, connection }) => {
   let userId;
+  const header = connection ? connection.context[authHeader] : req.get(authHeader);
 
   try {
-    const header = req.get('Authorization');
     const token = header ? header.replace('Bearer ', '') : '';
 
     ({ userId } = jwt.verify(token));
-
   } catch (err) {
     console.log('ERROR:', err);
     return { isAuthorized: false };
