@@ -1,11 +1,14 @@
-function password() {
-  return 'PRIVATE DATA';
-}
+import { paginate } from '../../utils';
 
-async function chats(_, __, { dataSources: { UserAPI } }) {
-  const user = await UserAPI.getUser();
+const password = () => 'PRIVATE DATA';
 
-  return user.getChats();
-}
+const chatsConnection = async (user, {
+  before, after, first, last,
+}) => paginate(user, {
+  method: 'getChats', before, after, first, last,
+});
 
-export default { password, chats };
+export default {
+  password,
+  chatsConnection,
+};

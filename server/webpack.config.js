@@ -1,18 +1,16 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
+const ENTRY_PATH = path.resolve(__dirname, 'src');
+const OUTPUT_PATH = path.resolve(__dirname, 'build');
+
 module.exports = {
-  entry: './src/index.js',
+  entry: ENTRY_PATH,
   output: {
-    path: path.join(__dirname, 'build'),
     filename: '[name].js',
+    path: OUTPUT_PATH,
   },
   target: 'node',
-  node: {
-    // Need this when working with express, otherwise the build fails
-    __dirname: false,
-    __filename: false,
-  },
   externals: [nodeExternals()],
   module: {
     rules: [

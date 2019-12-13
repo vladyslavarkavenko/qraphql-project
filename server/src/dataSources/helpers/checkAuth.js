@@ -1,5 +1,5 @@
-import TE from './TE';
-import { ERROR } from '../const';
+import { TE } from '../../utils';
+import { ERROR } from '../../const';
 
 const { UNAUTHENTICATED } = ERROR;
 

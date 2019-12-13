@@ -3,15 +3,12 @@ import { DataTypes, Model } from 'sequelize';
 import sequelize from '../store';
 import { ATTACHMENT_TYPE } from '../const';
 
-const { STRING, ENUM } = DataTypes;
+const { BOOLEAN, STRING, ENUM } = DataTypes;
 const {
-  IMAGE,
-  AUDIO,
-  VIDEO,
-  DOCUMENT,
+  IMAGE, AUDIO, VIDEO, DOCUMENT,
 } = ATTACHMENT_TYPE;
 
-const modelName = 'Message';
+const modelName = 'message';
 
 class Message extends Model {}
 Message.init({
@@ -25,6 +22,11 @@ Message.init({
   attachmentType: {
     type: ENUM,
     values: [IMAGE, AUDIO, VIDEO, DOCUMENT],
+  },
+  isEdited: {
+    type: BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
   },
 }, {
   sequelize,

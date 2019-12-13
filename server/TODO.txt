@@ -1,0 +1,7 @@
+TODO: Rewrite to use cookies instead of headers.
+TODO: Add GraphQl subscriptions for realtime.
+TODO: Make production build.
+TODO: Add debug script for chrome (--inspect) and try it.
+TODO: Write tests + fire them automatically before every commit (and build?).
+TODO: Add pretty README.md.
+TODO: Find alternative of 'rm -rf build' for Windows.

@@ -4,7 +4,7 @@ import sequelize from '../store';
 
 const { STRING, BOOLEAN } = DataTypes;
 
-const modelName = 'Chat';
+const modelName = 'chat';
 
 class Chat extends Model {}
 Chat.init({
@@ -17,6 +17,7 @@ Chat.init({
   anonymous: {
     type: BOOLEAN,
     allowNull: false,
+    defaultValue: true,
   },
 }, {
   sequelize,

@@ -1,9 +1,6 @@
 import { Sequelize } from 'sequelize';
-import {
-  DB_NAME,
-  DB_USERNAME,
-  DB_PASSWORD,
-} from './config';
+
+import { DB_NAME, DB_USERNAME, DB_PASSWORD } from './config';
 
 const sequelize = new Sequelize(
   {

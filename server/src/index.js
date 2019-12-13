@@ -1,6 +1,6 @@
 import { ApolloServer } from 'apollo-server';
 
-import { context } from './helpers';
+import context from './context';
 import typeDefs from './schema';
 import resolvers from './resolvers';
 import dataSources from './dataSources';

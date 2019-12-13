@@ -1,10 +1,10 @@
 {
   "name": "server",
-  "version": "1.0.0",
-  "description": "GraphQl server for authorization",
   "license": "ISC",
-  "author": "V.V.Arkavenko",
+  "version": "1.0.0",
   "main": "build/main.js",
+  "author": "V.V.Arkavenko",
+  "description": "GraphQl server for authorization",
   "scripts": {
     "clean": "rm -rf build",
     "build": "webpack --mode development",
@@ -16,40 +16,37 @@
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix"
   },
-  "_husky": {
+  "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
-    "src/**/*.js": [
+    "src/": [
       "npm run lint:fix",
       "git add"
     ]
   },
   "dependencies": {
     "apollo-datasource": "^0.1.3",
-    "apollo-datasource-rest": "^0.1.5",
     "apollo-server": "2.6.1",
     "bcryptjs": "^2.4.3",
     "dotenv": "^6.2.0",
     "graphql": "^14.5.8",
     "jsonwebtoken": "^8.5.1",
+    "node": "^13.3.0",
     "sequelize": "^5.21.2",
     "sqlite3": "^4.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
-    "@babel/preset-env": "^7.7.4",
-    "apollo": "^2.21.1",
-    "apollo-link": "^1.2.13",
-    "apollo-link-http": "^1.5.16",
     "babel-loader": "^8.0.6",
     "eslint": "^6.7.2",
     "eslint-loader": "^3.0.2",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "husky": "^3.1.0",
+    "lint-staged": "^9.5.0",
     "nodemon": "^1.19.4",
     "npm-run-all": "^4.1.5",
     "raw-loader": "^4.0.0",

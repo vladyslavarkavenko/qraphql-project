@@ -1,4 +1,6 @@
 type Query {
     me: User!,
-    Chat: Chat!
+    Chat(chatId: ID!): Chat!,
+    Message(msgId: ID!): Message!
+    User(userId: ID, email: String): User!,
 }

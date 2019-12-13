@@ -4,7 +4,7 @@ import sequelize from '../store';
 
 const { STRING } = DataTypes;
 
-const modelName = 'User';
+const modelName = 'user';
 
 class User extends Model {}
 User.init({

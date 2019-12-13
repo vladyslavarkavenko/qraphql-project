@@ -1,7 +1,19 @@
-async function participants({ id }, __, { dataSources: { ChatAPI } }) {
-  const chat = await ChatAPI.getChat(id);
+import { paginate } from '../../utils';
 
-  return chat.getParticipants();
-}
+const messagesConnection = async (chat, {
+  last, first, after, before,
+}) => paginate(chat, {
+  method: 'getMessages', last, first, after, before,
+});
 
-export default { participants };
+const participantsConnection = async (chat, {
+  last, first, after, before,
+}) => paginate(chat, {
+  method: 'getParticipants', last, first, after, before,
+});
+
+
+export default {
+  messagesConnection,
+  participantsConnection,
+};

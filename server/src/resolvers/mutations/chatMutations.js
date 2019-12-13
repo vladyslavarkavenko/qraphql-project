@@ -1,4 +1,3 @@
-// Chat
 export const createChat = async (
   _,
   {
@@ -24,24 +23,3 @@ export const deleteChat = async (
   { chatId },
   { dataSources: { ChatAPI } },
 ) => ChatAPI.deleteChat(chatId);
-
-// Messages
-export const updateMessage = async (
-  _,
-  {
-    msgId, text, attachment, attachmentType,
-  },
-  { dataSources: { ChatAPI } },
-) => ChatAPI.updateMessage(
-  msgId, text, attachment, attachmentType,
-);
-
-export const createMessage = async (
-  _,
-  {
-    text, chatId, attachment, attachmentType,
-  },
-  { dataSources: { ChatAPI } },
-) => ChatAPI.createMessage(
-  text, chatId, attachment, attachmentType,
-);

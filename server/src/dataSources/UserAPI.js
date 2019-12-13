@@ -1,12 +1,8 @@
 import { DataSource } from 'apollo-datasource';
 
 import { ERROR } from '../const';
-import {
-  TE,
-  jwt,
-  pass,
-  checkAuth,
-} from '../helpers';
+import { checkAuth } from './helpers';
+import { TE, jwt, pass } from '../utils';
 
 const { INVALID_CREDENTIALS } = ERROR;
 
@@ -21,6 +17,50 @@ class UserAPI extends DataSource {
     this.ctx = config.context;
   }
 
+  async getUser(userId, email) {
+    let user;
+    const { User } = this.models;
+
+    try {
+      if (userId) {
+        [user] = await User.findAll({
+          where: { id: userId },
+        });
+      } else if (email) {
+        [user] = await User.findAll({
+          where: { email },
+        });
+      } else {
+        const id = checkAuth(this.ctx);
+
+        [user] = await User.findAll({
+          where: { id },
+        });
+      }
+    } catch (err) {
+      TE(err);
+    }
+
+    return user;
+  }
+
+  async updateUser({ email, name }) {
+    let user;
+    const { User } = this.models;
+    const id = checkAuth(this.ctx);
+
+    try {
+      [user] = await User.update(
+        { email, name },
+        { where: { id } },
+      );
+    } catch (err) {
+      TE(err);
+    }
+
+    return user;
+  }
+
   async login({ email, password }) {
     let user;
     const { User } = this.models;
@@ -29,16 +69,16 @@ class UserAPI extends DataSource {
       [user] = await User.findAll({
         where: { email },
       });
-
-      if (!user) {
-        TE(INVALID_CREDENTIALS);
-      }
-
-      if (!pass.compare(password, user.password)) {
-        TE(INVALID_CREDENTIALS);
-      }
     } catch (err) {
       TE(err);
+    }
+
+    if (!user) {
+      TE(INVALID_CREDENTIALS);
+    }
+
+    if (!pass.compare(password, user.password)) {
+      TE(INVALID_CREDENTIALS);
     }
 
     return { user, token: jwt.create(user) };
@@ -59,29 +99,6 @@ class UserAPI extends DataSource {
     }
 
     return { user, token: jwt.create(user) };
-  }
-
-  async getUser({ email } = {}) {
-    let user;
-    const { User } = this.models;
-
-    try {
-      if (email) {
-        [user] = await User.findAll({
-          where: { email },
-        });
-      } else {
-        const id = checkAuth(this.ctx);
-
-        [user] = await User.findAll({
-          where: { id },
-        });
-      }
-    } catch (err) {
-      TE(err);
-    }
-
-    return user;
   }
 }
 

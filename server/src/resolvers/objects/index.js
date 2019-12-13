@@ -1,9 +1,9 @@
 import User from './userObject';
 import Chat from './chatObject';
-import Model from './modelObject';
+import Message from './messageObject';
 
 export default {
   User,
   Chat,
-  Model,
+  Message,
 };

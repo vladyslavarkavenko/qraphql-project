@@ -1,31 +1,14 @@
 import { DataSource } from 'apollo-datasource';
 
-import { ERROR } from '../const';
-import { checkAuth, TE } from '../helpers';
-
-const { PERMISSION_DENIED, NOT_FOUND } = ERROR;
-
-// TODO: Add ownerId and chatId different logic for checkChatPermissions.
-// TODO: Add ownerId for Message so we know who can update it.
-
-const checkChatPermissions = async (chat, userId) => {
-  if (!chat) {
-    TE(NOT_FOUND);
-  }
-
-  const participants = await chat.getParticipants();
-  if (participants.findIndex(({ id }) => id === userId) === -1) {
-    TE(PERMISSION_DENIED);
-  }
-
-  return participants;
-};
+import { TE } from '../utils';
+import { checkAuth, checkChatPermissions } from './helpers';
 
 class ChatAPI extends DataSource {
   constructor({ models }) {
     super();
 
     this.models = models;
+    this.checkChatPermissions = checkChatPermissions.bind(this);
   }
 
   initialize(config) {
@@ -33,28 +16,10 @@ class ChatAPI extends DataSource {
   }
 
   async getChat(chatId) {
-    let chat;
-    const { Chat } = this.models;
-    const userId = checkAuth(this.ctx);
-
-    try {
-      [chat] = await Chat.findAll({
-        where: {
-          id: chatId,
-        },
-      });
-
-      await checkChatPermissions(chat, userId);
-    } catch (err) {
-      TE(err);
-    }
-
-    return chat;
+    return this.checkChatPermissions(chatId);
   }
 
-  async createChat(
-    name, img, anonymous = true, participants,
-  ) {
+  async createChat(name, img, anonymous, participants) {
     let chat;
     const { Chat } = this.models;
     const userId = checkAuth(this.ctx);
@@ -64,8 +29,28 @@ class ChatAPI extends DataSource {
 
       await chat.setOwner(userId);
 
-      const p = [...new Set([...participants.map((a) => +a), userId])];
-      await chat.setParticipants(p);
+      const participantsIds = participants.map((a) => +a);
+      await chat.setParticipants([...new Set([...participantsIds, userId])]);
+    } catch (err) {
+      TE(err);
+    }
+
+    return chat;
+  }
+
+  async updateChat(chatId, name, img, anonymous, participants) {
+    const userId = checkAuth(this.ctx);
+
+    const chat = await this.checkChatPermissions(chatId, true);
+    try {
+      await chat.update({ img, name, anonymous });
+
+      if (participants) {
+        const participantsIds = participants.map((a) => +a);
+        const users = [...new Set([...participantsIds, userId])];
+
+        await chat.setParticipants(users);
+      }
     } catch (err) {
       TE(err);
     }
@@ -74,133 +59,9 @@ class ChatAPI extends DataSource {
   }
 
   async deleteChat(chatId) {
-    let success;
-    const { Chat } = this.models;
-    const ownerId = checkAuth(this.ctx);
+    const chat = await this.checkChatPermissions(chatId, true);
 
-    try {
-      success = await Chat.destroy({
-        where: {
-          ownerId,
-          id: chatId,
-        },
-      });
-
-      if (!success) {
-        TE(NOT_FOUND);
-      }
-    } catch (err) {
-      TE(err);
-    }
-
-    return !!success;
-  }
-
-  async updateChat(
-    chatId,
-    name,
-    img,
-    anonymous,
-    participants,
-  ) {
-    let chat;
-    const { Chat } = this.models;
-    const ownerId = checkAuth(this.ctx);
-
-    try {
-      [chat] = await Chat.findAll({
-        where: {
-          ownerId,
-          id: chatId,
-        },
-      });
-
-      if (!chat) {
-        TE(NOT_FOUND);
-      }
-
-      await chat.update({
-        img,
-        name,
-        anonymous,
-      });
-
-      if (participants !== undefined) {
-        const p = [...new Set([...participants.map((a) => +a), ownerId])];
-        await chat.setParticipants(p);
-      }
-    } catch (err) {
-      TE(err);
-    }
-
-    return chat;
-  }
-
-  async createMessage(
-    text,
-    chatId,
-    attachment,
-    attachmentType,
-  ) {
-    let message;
-    const userId = checkAuth(this.ctx);
-    const { Chat, Message } = this.models;
-
-    try {
-      const [chat] = await Chat.findAll({
-        where: {
-          id: chatId,
-        },
-      });
-
-      await checkChatPermissions(chat, userId);
-
-      message = await Message.create({
-        text,
-        attachment,
-        attachmentType,
-      });
-
-      await message.setOwner(userId);
-      await chat.addMessages([message]);
-    } catch (err) {
-      TE(err);
-    }
-
-    return message;
-  }
-
-  async updateMessage(
-    msgId,
-    text,
-    attachment,
-    attachmentType,
-  ) {
-    let message;
-    const { Chat, Message } = this.models;
-    const userId = checkAuth(this.ctx);
-
-    try {
-      [message] = await Message.findAll({
-        where: {
-          id: msgId,
-        },
-      });
-
-      if (!message) {
-        TE(NOT_FOUND);
-      }
-
-      await message.update(
-        text,
-        attachment,
-        attachmentType,
-      );
-    } catch (err) {
-      TE(err);
-    }
-
-    return message;
+    return !!await chat.destroy();
   }
 }
 

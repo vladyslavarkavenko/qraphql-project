@@ -1,17 +1,19 @@
 type AuthPayload {
-    token: String
     user: User
+    token: String
 }
 
 type Mutation {
     # User
+    updateUser(email: String, name: String): User!
     login(email: String!, password: String!): AuthPayload!
-    signup(email: String!, password: String!, name: String): AuthPayload!
+    signup(email: String!, password: String!, name: String!): AuthPayload!
     # Chat
     deleteChat(chatId: ID!): Boolean!
     createChat(name: String, img: String, anonymous: Boolean, participants: [ID]!): Chat!
     updateChat(chatId: ID!, name: String, img: String, anonymous: Boolean, participants: [ID]): Chat!
     # Message
-    createMessage(text: String!, chatId: ID!, attachment: String, attachmentType: AttachmantType): Message!
+    deleteMessage(msgId: ID!): Boolean!
     updateMessage(msgId: ID!, text: String!, attachment: String, attachmentType: AttachmantType): Message!
+    createMessage(text: String!, chatId: ID!, attachment: String, attachmentType: AttachmantType): Message!
 }

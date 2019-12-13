@@ -1,34 +1,37 @@
-interface Model {
+interface Node {
     id: ID!
     createdAt: DATE!
     updatedAt: DATE!
 }
 
-type Chat implements Model {
-    id: ID!
-    name: String
-    img: String
-    participants: [User]!
-    anonymous: Boolean!
-    createdAt: DATE!
-    updatedAt: DATE!
-}
-
-type User implements Model {
+type User implements Node {
     id: ID!
     name: String
     email: String!
-    password: String!
-    chats: [Chat]!
     createdAt: DATE!
     updatedAt: DATE!
+    password: String!
+    chatsConnection(first: Int, after: String, last: Int, before: String): UserChatsConnection!
 }
 
-type Message implements Model {
+type Chat implements Node {
     id: ID!
-    text: String!
-    attachment: String
-    attachmentType: AttachmantType
+    img: String
+    name: String
     createdAt: DATE!
     updatedAt: DATE!
+    anonymous: Boolean!
+    messagesConnection(first: Int, after: String, last: Int, before: String): ChatMessagesConnection!
+    participantsConnection(first: Int, after: String, last: Int, before: String): ChatParticipantsConnection!
+}
+
+type Message implements Node {
+    id: ID!
+    views: Int!
+    text: String!
+    createdAt: DATE!
+    updatedAt: DATE!
+    isEdited: Boolean!
+    attachment: String
+    attachmentType: AttachmantType
 }

@@ -1,0 +1,37 @@
+type PageInfo {
+    hasPrev: Boolean!
+    hasNext: Boolean!
+}
+
+# UserChat
+type UserChatsEdge {
+    cursor: String!
+    node: Chat!
+}
+
+type UserChatsConnection {
+    pageInfo: PageInfo!
+    edges: [UserChatsEdge]!
+}
+
+# ChatParticipans
+type ChatParticipantsEdge {
+    cursor: String!
+    node: User!
+}
+
+type ChatParticipantsConnection {
+    pageInfo: PageInfo!
+    edges: [ChatParticipantsEdge]!
+}
+
+# ChatMessages
+type ChatMessagesEdge {
+    cursor: String!
+    node: Message!
+}
+
+type ChatMessagesConnection {
+    pageInfo: PageInfo!
+    edges: [ChatMessagesEdge]!
+}
