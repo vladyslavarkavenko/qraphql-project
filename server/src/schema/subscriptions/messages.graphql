@@ -1,0 +1,10 @@
+enum MessagesActions {
+    MESSAGE_CREATED,
+    MESSAGE_UPDATED,
+    MESSAGE_DELETED
+}
+
+type MessageResponse {
+    type: MessagesActions!
+    data: Message!
+}

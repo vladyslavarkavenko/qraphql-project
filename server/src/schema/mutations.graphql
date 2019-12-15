@@ -5,9 +5,11 @@ type AuthPayload {
 
 type Mutation {
     # User
+    online: Int!
+    deleteUser: User!
     updateUser(email: String, name: String): User!
     login(email: String!, password: String!): AuthPayload!
-    signup(email: String!, password: String!, name: String!): AuthPayload!
+    signup(email: String!, password: String!, name: String!, avatar: String): AuthPayload!
     # Chat
     deleteChat(chatId: ID!): Chat!
     createChat(name: String, img: String, anonymous: Boolean, participants: [ID]!): Chat!

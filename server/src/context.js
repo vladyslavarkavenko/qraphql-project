@@ -1,21 +1,14 @@
-import { jwt } from './utils';
+import { getAuthData } from './utils';
 
-const authHeader = 'Authorization';
-
-const context = ({ req, connection }) => {
-  let userId;
-  const header = connection ? connection.context[authHeader] : req.get(authHeader);
-
+const context = (integrationContext) => {
   try {
-    const token = header ? header.replace('Bearer ', '') : '';
+    const { userId } = getAuthData(integrationContext);
 
-    ({ userId } = jwt.verify(token));
+    return { isAuthorized: true, userId };
   } catch (err) {
     console.log('ERROR:', err);
     return { isAuthorized: false };
   }
-
-  return { isAuthorized: true, userId };
 };
 
 export default context;

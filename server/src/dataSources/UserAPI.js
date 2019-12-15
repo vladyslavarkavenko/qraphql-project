@@ -10,6 +10,7 @@ class UserAPI extends DataSource {
   constructor({ models }) {
     super();
 
+    this.timers = {};
     this.models = models;
   }
 
@@ -44,21 +45,68 @@ class UserAPI extends DataSource {
     return user;
   }
 
-  async update({ email, name }) {
+  async update({
+    email, name, avatar, online, lastSeen,
+  }) {
     let user;
     const { User } = this.models;
     const id = checkAuth(this.ctx);
 
     try {
-      [user] = await User.update(
-        { email, name },
+      [user] = await User.findAll(
         { where: { id } },
       );
+
+      await user.update({
+        email, name, avatar, online, lastSeen,
+      });
     } catch (err) {
       TE(err);
     }
 
     return user;
+  }
+
+  async delete() {
+    let user;
+    const { User } = this.models;
+    const id = checkAuth(this.ctx);
+
+    try {
+      [user] = await User.findAll({
+        where: { id },
+      });
+      await user.destroy();
+    } catch (err) {
+      TE(err);
+    }
+
+    return user;
+  }
+
+  async online(onUpdate) {
+    const period = 60 * 1000;
+
+    const lastSeen = Date.now();
+    const id = checkAuth(this.ctx);
+
+    if (!this.timers[id]) {
+      const user = await this.update({ online: true });
+
+      if (onUpdate) onUpdate(user);
+    }
+
+    this.timers[id] = setTimeout(
+      async () => {
+        const user = await this.update({ online: false, lastSeen });
+
+        this.timers[id] = null;
+        if (onUpdate) onUpdate(user);
+      },
+      period,
+    );
+
+    return period - 60 * 1000;
   }
 
   async login({ email, password }) {
@@ -84,7 +132,9 @@ class UserAPI extends DataSource {
     return { user, token: jwt.create(user) };
   }
 
-  async signup({ email, password, name }) {
+  async signup({
+    email, password, name, avatar,
+  }) {
     let user;
     const { User } = this.models;
 
@@ -92,6 +142,7 @@ class UserAPI extends DataSource {
       user = await User.create({
         name,
         email,
+        avatar,
         password: pass.hash(password),
       });
     } catch (err) {

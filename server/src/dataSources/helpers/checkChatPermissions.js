@@ -6,6 +6,7 @@ const { PERMISSION_DENIED, NOT_FOUND } = ERROR;
 
 async function checkChatPermissions(chatId, isOwner = false) {
   let chat;
+  let participants;
   const { Chat } = this.models;
   const userId = checkAuth(this.ctx);
 
@@ -24,6 +25,12 @@ async function checkChatPermissions(chatId, isOwner = false) {
     if (!chat) {
       TE(NOT_FOUND);
     }
+
+    try {
+      participants = await chat.getParticipants();
+    } catch (err) {
+      TE(err);
+    }
   } else {
     try {
       [chat] = await Chat.findAll({
@@ -39,13 +46,18 @@ async function checkChatPermissions(chatId, isOwner = false) {
       TE(NOT_FOUND);
     }
 
-    const participants = await chat.getParticipants();
+    try {
+      participants = await chat.getParticipants();
+    } catch (err) {
+      TE(err);
+    }
+
     if (participants.findIndex(({ id }) => id === userId) === -1) {
       TE(PERMISSION_DENIED);
     }
   }
 
-  return chat;
+  return { ...chat, participants };
 }
 
 export default checkChatPermissions;

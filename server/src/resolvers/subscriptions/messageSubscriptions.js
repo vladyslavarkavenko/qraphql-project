@@ -1,31 +1,18 @@
 import { withFilter } from 'apollo-server';
 
 import pubsub from '../../pubsub';
-import { PUBSUB_MESSAGE } from '../../const';
+import { PUBSUB } from '../../const';
 
-const {
-  MESSAGE_CREATED,
-  MESSAGE_UPDATED,
-  MESSAGE_DELETED,
-} = PUBSUB_MESSAGE;
+const { MESSAGES } = PUBSUB.MESSAGE;
 
-export const messageCreated = {
+// eslint-disable-next-line import/prefer-default-export
+export const messages = {
   subscribe: withFilter(
-    () => pubsub.asyncIterator(MESSAGE_CREATED),
-    (payload, args) => payload.chatId === args.chatId,
-  ),
-};
-
-export const messageUpdated = {
-  subscribe: withFilter(
-    () => pubsub.asyncIterator(MESSAGE_UPDATED),
-    (payload, args) => payload.chatId === args.chatId,
-  ),
-};
-
-export const messageDeleted = {
-  subscribe: withFilter(
-    () => pubsub.asyncIterator(MESSAGE_DELETED),
-    (payload, args) => payload.chatId === args.chatId,
+    () => pubsub.asyncIterator([MESSAGES]),
+    (
+      { messages: { data: { chat: { participants } } } },
+      _,
+      { userId },
+    ) => participants.find(({ id }) => id === userId),
   ),
 };

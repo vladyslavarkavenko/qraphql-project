@@ -1,0 +1,10 @@
+enum ChatsActions {
+    CHAT_CREATED,
+    CHAT_UPDATED,
+    CHAT_DELETED
+}
+
+type ChatsResponse {
+    type: ChatsActions!
+    data: Chat!
+}

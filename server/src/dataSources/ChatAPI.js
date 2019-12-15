@@ -31,6 +31,8 @@ class ChatAPI extends DataSource {
 
       const participantsIds = participants.map((a) => +a);
       await chat.setParticipants([...new Set([...participantsIds, userId])]);
+      // eslint-disable-next-line no-param-reassign
+      chat.participants = await chat.getParticipants();
     } catch (err) {
       TE(err);
     }
@@ -59,7 +61,7 @@ class ChatAPI extends DataSource {
   }
 
   async delete(chatId) {
-    const chat = await this.checkMsgPermissions(chatId, true);
+    const chat = await this.checkChatPermissions(chatId, true);
 
     try {
       await chat.destroy();

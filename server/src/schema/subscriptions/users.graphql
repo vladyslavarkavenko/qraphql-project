@@ -1,0 +1,10 @@
+enum UsersActions {
+    USER_CREATED,
+    USER_UPDATED,
+    USER_DELETED
+}
+
+type UsersResponse {
+    type: UsersActions!
+    data: User!
+}

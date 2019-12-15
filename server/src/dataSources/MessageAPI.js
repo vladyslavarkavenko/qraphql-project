@@ -47,7 +47,7 @@ class MessageAPI extends DataSource {
       TE(err);
     }
 
-    return message;
+    return { ...message, chat };
   }
 
   async update(msgId, text, attachment, attachmentType) {

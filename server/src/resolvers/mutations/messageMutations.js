@@ -1,11 +1,10 @@
 import pubsub from '../../pubsub';
-import { PUBSUB_MESSAGE } from '../../const';
+import { PUBSUB } from '../../const';
 
 const {
-  MESSAGE_CREATED,
-  MESSAGE_UPDATED,
-  MESSAGE_DELETED,
-} = PUBSUB_MESSAGE;
+  MESSAGE: { MESSAGES },
+  MESSAGE_TYPES: { MESSAGE_CREATED, MESSAGE_UPDATED, MESSAGE_DELETED },
+} = PUBSUB;
 
 export const createMessage = async (
   _,
@@ -18,8 +17,11 @@ export const createMessage = async (
     text, chatId, attachment, attachmentType,
   );
 
-  pubsub.publish(MESSAGE_CREATED, {
-    messageCreated: message,
+  pubsub.publish(MESSAGES, {
+    messages: {
+      type: MESSAGE_CREATED,
+      data: message,
+    },
   });
 
   return message;
@@ -36,8 +38,11 @@ export const updateMessage = async (
     msgId, text, attachment, attachmentType,
   );
 
-  pubsub.publish(MESSAGE_UPDATED, {
-    messageUpdated: message,
+  pubsub.publish(MESSAGES, {
+    messages: {
+      type: MESSAGE_UPDATED,
+      data: message,
+    },
   });
 
   return message;
@@ -50,9 +55,11 @@ export const deleteMessage = async (
 ) => {
   const message = await MessageAPI.delete(msgId);
 
-  pubsub.publish(MESSAGE_DELETED, {
-    deleteMessage: message,
+  pubsub.publish(MESSAGES, {
+    messages: {
+      type: MESSAGE_DELETED,
+      data: message,
+    },
   });
-
   return message;
 };

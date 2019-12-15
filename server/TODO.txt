@@ -1,22 +1,13 @@
-TODO: Finish todoList (not only for server) and order todos it by priority.
-TODO: messageSubscriptions.js
-      Handle case when there is no "args.chatId".
-      Add userId to Message model and compare it with context.userId.
-TODO: Finish subscriptions setup.
-TODO: Test this.
-TODO: Check how it works for file transfer e.t.c.
-TODO: Read full documentation for Apollo Server, Sequlize.
-TODO: Add GraphQl subscriptions for realtime.
-TODO: Add avatar to user.
-TODO: Make production build.
-TODO: Add debug script for chrome (--inspect) and try it.
-TODO: Write tests + fire them automatically before every commit (and build?).
-TODO: Add pretty README.md.
-TODO: Find alternative of 'rm -rf build' for Windows.
-TODO: Add online status and lastSeen. (onConnect / onDisconnect)
-TODO: Add delete user
+TODO: Add refresh token.
+TODO: Handle file transfers e.t.c.
+TODO: If chat is anonymous do not let to get participants.
 TODO: Add user "Typing..."
-
+TODO: Test this.
+TODO: Write tests + fire them automatically before every commit (and build?).
+TODO: Read full documentation for Apollo Server, Sequlize.
+TODO: Add descriptions.
 ______________________________________________________________________________________
 
 TODO: Read Apollo Client (React), Apollo Link.
+TODO: Design.
+TODO: Build client

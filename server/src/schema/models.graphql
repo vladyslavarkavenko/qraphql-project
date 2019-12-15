@@ -4,10 +4,19 @@ interface Node {
     updatedAt: DATE!
 }
 
+enum AttachmantType {
+    IMAGE,
+    AUDIO,
+    VIDEO,
+    DOCUMENT
+}
+
 type User implements Node {
     id: ID!
     name: String
     email: String!
+    online: Boolean!
+    lastSeen: DATE!
     createdAt: DATE!
     updatedAt: DATE!
     password: String!
