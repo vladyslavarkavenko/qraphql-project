@@ -7,8 +7,8 @@ Database: SQL
     1.
 
 ### Server
-    1. cd server/ \
-    2 (only for initial launch). npm install --only=production\
+    1. cd server/
+    2 (only for initial launch). npm install --only=production
     3. npm start
 
 # Development:
@@ -16,8 +16,8 @@ Database: SQL
     1.
 
 ### Server
-    1. cd server/ \
-    2 (only fon initial launch). npm i \
+    1. cd server/
+    2 (only fon initial launch). npm i
     3*. npm run dev:start 
 
 * To debug: Click on Node.js icon in DevTools while Node is running.
