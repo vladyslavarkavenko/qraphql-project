@@ -4,9 +4,9 @@ const authHeader = 'Authorization';
 
 const getAuthData = ({ req, connection }) => {
   const header = connection ? connection.context[authHeader] : req.get(authHeader);
-  const token = header ? header.replace('Bearer ', '') : '';
+  const accessToken = header ? header.replace('Bearer ', '') : '';
 
-  return jwt.verify(token);
+  return jwt.verify(accessToken);
 };
 
 export default getAuthData;

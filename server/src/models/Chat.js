@@ -13,6 +13,9 @@ Chat.init({
   },
   img: {
     type: STRING,
+    validate: {
+      isUrl: true,
+    },
   },
   anonymous: {
     type: BOOLEAN,

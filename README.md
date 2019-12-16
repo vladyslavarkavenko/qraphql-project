@@ -1,4 +1,4 @@
-Frontend: React(Hooks) + TypeScript + GraphQL + Tests \
+Frontend (PWA): React(Hooks) + Bootstrap + TypeScript + GraphQL + Tests \
 Backend: Node.js + GraphQL + Tests \
 Database: SQL
 

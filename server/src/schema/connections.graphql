@@ -35,3 +35,14 @@ type ChatMessagesConnection {
     pageInfo: PageInfo!
     edges: [ChatMessagesEdge]!
 }
+
+# UserFriends
+type UserFriendsEdge {
+    cursor: String!
+    node: User!
+}
+
+type UserFriendsConnection {
+    pageInfo: PageInfo!
+    edges: [UserFriendsEdge]!
+}

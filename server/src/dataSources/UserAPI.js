@@ -4,7 +4,7 @@ import { ERROR } from '../const';
 import { checkAuth } from './helpers';
 import { TE, jwt, pass } from '../utils';
 
-const { INVALID_CREDENTIALS } = ERROR;
+const { UNAUTHENTICATED } = ERROR;
 
 class UserAPI extends DataSource {
   constructor({ models }) {
@@ -46,7 +46,14 @@ class UserAPI extends DataSource {
   }
 
   async update({
-    email, name, avatar, online, lastSeen,
+    sex,
+    name,
+    email,
+    avatar,
+    online,
+    lastSeen,
+    friends,
+    birthday,
   }) {
     let user;
     const { User } = this.models;
@@ -58,8 +65,18 @@ class UserAPI extends DataSource {
       );
 
       await user.update({
-        email, name, avatar, online, lastSeen,
+        sex,
+        name,
+        email,
+        online,
+        avatar,
+        lastSeen,
+        birthday,
       });
+
+      if (friends) {
+        await user.setFriends([...new Set(friends.map((a) => +a))]);
+      }
     } catch (err) {
       TE(err);
     }
@@ -121,35 +138,61 @@ class UserAPI extends DataSource {
       TE(err);
     }
 
-    if (!user) {
-      TE(INVALID_CREDENTIALS);
+    if (!user || !pass.compare(password, user.password)) {
+      TE(UNAUTHENTICATED);
     }
 
-    if (!pass.compare(password, user.password)) {
-      TE(INVALID_CREDENTIALS);
-    }
-
-    return { user, token: jwt.create(user) };
+    return { user, tokens: await jwt.create(user) };
   }
 
   async signup({
-    email, password, name, avatar,
+    email, password, name, avatar, birthday, sex,
   }) {
     let user;
     const { User } = this.models;
 
     try {
       user = await User.create({
+        sex,
         name,
         email,
         avatar,
+        birthday,
         password: pass.hash(password),
       });
     } catch (err) {
       TE(err);
     }
 
-    return { user, token: jwt.create(user) };
+    return { user, tokens: await jwt.create(user) };
+  }
+
+  async refresh({ refreshToken }) {
+    let user;
+    const { User } = this.models;
+
+    jwt.verify(refreshToken);
+    try {
+      [user] = await User.findAll({
+        where: { refreshToken },
+      });
+    } catch (err) {
+      TE(err);
+    }
+
+    if (!user) {
+      TE(UNAUTHENTICATED);
+    }
+
+    const tokens = await jwt.create(user);
+
+    try {
+      await user.update({ refreshToken: tokens.refreshToken });
+    } catch (err) {
+      TE(err);
+    }
+
+    return { user, tokens };
   }
 }
 

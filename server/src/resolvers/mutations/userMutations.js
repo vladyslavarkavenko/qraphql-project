@@ -7,16 +7,20 @@ const {
   MESSAGE_TYPES: { USER_UPDATED, USER_DELETED },
 } = PUBSUB;
 
-export const login = async (_, {
-  email, password,
-}, { dataSources: { UserAPI } }) => UserAPI.login({
+export const login = async (
+  _,
+  { email, password },
+  { dataSources: { UserAPI } },
+) => UserAPI.login({
   email, password,
 });
 
-export const online = async (_, __, { dataSources: { UserAPI } }) => UserAPI.online(
+export const online = async (
+  _,
+  __,
+  { dataSources: { UserAPI } },
+) => UserAPI.online(
   (user) => {
-    console.log('user', user);
-    debugger;
     pubsub.publish(USERS, {
       users: {
         type: USER_UPDATED,
@@ -26,11 +30,21 @@ export const online = async (_, __, { dataSources: { UserAPI } }) => UserAPI.onl
   },
 );
 
-export const signup = async (_, {
-  email, password, name, avatar,
-}, { dataSources: { UserAPI } }) => UserAPI.signup({
-  email, password, name, avatar,
+export const signup = async (
+  _,
+  {
+    email, password, name, avatar, sex, birthday,
+  },
+  { dataSources: { UserAPI } },
+) => UserAPI.signup({
+  email, password, name, avatar, sex, birthday,
 });
+
+export const refresh = async (
+  _,
+  refreshToken,
+  { dataSources: { UserAPI } },
+) => UserAPI.refresh(refreshToken);
 
 export const deleteUser = async (
   _,
@@ -49,11 +63,15 @@ export const deleteUser = async (
   return user;
 };
 
-export const updateUser = async (_, {
-  email, name, avatar,
-}, { dataSources: { UserAPI } }) => {
+export const updateUser = async (
+  _,
+  {
+    email, name, avatar, sex, birthday, friends,
+  },
+  { dataSources: { UserAPI } },
+) => {
   const user = UserAPI.update({
-    email, name, avatar,
+    email, name, avatar, sex, birthday, friends,
   });
 
   pubsub.publish(USERS, {

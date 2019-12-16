@@ -13,14 +13,16 @@ enum AttachmantType {
 
 type User implements Node {
     id: ID!
-    name: String
+    sex: SEX!,
+    name: String!
     email: String!
+    birthday: DATE!,
     online: Boolean!
     lastSeen: DATE!
     createdAt: DATE!
     updatedAt: DATE!
-    password: String!
     chatsConnection(first: Int, after: String, last: Int, before: String): UserChatsConnection!
+    friendsConnection(first: Int, after: String, last: Int, before: String): UserFriendsConnection!
 }
 
 type Chat implements Node {

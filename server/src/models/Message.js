@@ -18,6 +18,9 @@ Message.init({
   },
   attachment: {
     type: STRING,
+    validate: {
+      isUrl: true,
+    },
   },
   attachmentType: {
     type: ENUM,

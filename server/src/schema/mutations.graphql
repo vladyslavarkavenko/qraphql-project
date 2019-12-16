@@ -1,15 +1,26 @@
+enum SEX {
+    MALE
+    FEMALE,
+}
+
+type Tokens {
+    accessToken: String!
+    refreshToken: String!
+}
+
 type AuthPayload {
     user: User
-    token: String
+    tokens: Tokens!
 }
 
 type Mutation {
     # User
     online: Int!
     deleteUser: User!
-    updateUser(email: String, name: String): User!
+    updateUser(email: String, name: String, avatar: String, sex: SEX, birthday: DATE, friends: [ID]): User!
+    refresh(refreshToken: String!): AuthPayload!
     login(email: String!, password: String!): AuthPayload!
-    signup(email: String!, password: String!, name: String!, avatar: String): AuthPayload!
+    signup(email: String!, password: String!, name: String!, avatar: String, sex: SEX!, birthday: DATE!): AuthPayload!
     # Chat
     deleteChat(chatId: ID!): Chat!
     createChat(name: String, img: String, anonymous: Boolean, participants: [ID]!): Chat!

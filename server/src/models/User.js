@@ -1,8 +1,13 @@
 import { DataTypes, Model } from 'sequelize';
 
 import sequelize from '../store';
+import { USER_SEX } from '../const';
 
-const { STRING, BOOLEAN, DATE } = DataTypes;
+const { FEMALE, MALE } = USER_SEX;
+
+const {
+  STRING, BOOLEAN, DATE, ENUM,
+} = DataTypes;
 
 const modelName = 'user';
 
@@ -17,6 +22,15 @@ User.init({
     validate: {
       isUrl: true,
     },
+  },
+  birthday: {
+    type: DATE,
+    allowNull: false,
+  },
+  sex: {
+    type: ENUM,
+    allowNull: false,
+    values: [FEMALE, MALE],
   },
   email: {
     type: STRING,
@@ -38,6 +52,9 @@ User.init({
     type: DATE,
     allowNull: false,
     defaultValue: Date.now(),
+  },
+  refreshToken: {
+    type: STRING,
   },
 }, {
   sequelize,

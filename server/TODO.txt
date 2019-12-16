@@ -1,13 +1,30 @@
-TODO: Add refresh token.
-TODO: Handle file transfers e.t.c.
+Server
+TODO: Check what is going on when there is no access token.
 TODO: If chat is anonymous do not let to get participants.
-TODO: Add user "Typing..."
-TODO: Test this.
+TODO: Create chat with many users ONLY from your friends list.
+TODO: Start anonymous chat with random user (you can specify parameters for search as gender, age).
+TODO: You can offer to become friends,then if another user accepts, all messages duplicates to normal chat and you can see each other profile.
+TODO: Handle file transfers e.t.c.
+TODO: Test this properly.
 TODO: Write tests + fire them automatically before every commit (and build?).
-TODO: Read full documentation for Apollo Server, Sequlize.
-TODO: Add descriptions.
+TODO: Read full documentation for Apollo Server, Sequelize.
+*************************************************************
+TODO: Add doc descriptions.
+TODO: Add user "Typing..."
+TODO: Think about how to improve "online" functionality.
+TODO: Make "addParticipant", "removeParticipant" for Chat
+      and "addFriend", "removeFriend" for User
+      (because of pagination we don't know all ids in advance and can not just update them using Model.set)
+
 ______________________________________________________________________________________
 
+Design.
+TODO: Create design in Figma.
+______________________________________________________________________________________
+
+Client
 TODO: Read Apollo Client (React), Apollo Link.
-TODO: Design.
 TODO: Build client
+
+
+

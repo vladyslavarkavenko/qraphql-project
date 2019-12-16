@@ -9,6 +9,7 @@ export const {
   DB_USERNAME = 'username',
   DB_PASSWORD = 'password',
 
-  JWT_SECRET = 'secret',
-  JWT_EXPIRES_IN = 24 * 60 * 60 * 1000, // One day
+  TOKEN_SECRET = 'secret',
+  ACCESS_TOKEN_EXPIRES_IN = 24 * 60 * 60 * 1000, // One day
+  REFRESH_TOKEN_EXPIRES_IN = 30 * 24 * 60 * 60 * 1000, // One month
 } = process.env;
