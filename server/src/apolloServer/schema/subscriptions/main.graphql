@@ -1,0 +1,6 @@
+type Subscription {
+    messages: MessageResponse!
+    chats(watch: [ID]): ChatsResponse!
+    users(watch: [ID]!): UsersResponse!
+    startAnonymousChat(minAge: Int, maxAge: Int, sex: SEX): Chat!
+}

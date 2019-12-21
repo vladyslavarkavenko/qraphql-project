@@ -1,3 +1,5 @@
+export const AUTH_HEADER = 'Authorization';
+
 export const ERROR = {
   NOT_FOUND: 'NOT_FOUND',
   INVALID_DATA: 'INVALID_DATA',
@@ -24,6 +26,7 @@ export const PUBSUB = {
     USERS: 'USERS',
     CHATS: 'CHATS',
     MESSAGES: 'MESSAGES',
+    MATCH_FOUND: 'MATCH_FOUND',
   },
   MESSAGE_TYPES: {
     USER_UPDATED: 'USER_UPDATED',

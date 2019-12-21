@@ -1,5 +1,0 @@
-type Subscription {
-    messages: MessageResponse!
-    chats(watch: [ID]): ChatsResponse!
-    users(watch: [ID]!): UsersResponse!
-}
