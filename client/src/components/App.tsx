@@ -1,12 +1,13 @@
 import * as React from 'react';
 import TestImg from '../assets/asfafs.jpg';
-import './Hello.scss';
+import './App.scss';
 
 export interface HelloProps {
-  compiler: string;  framework: string;
+  compiler: string;
+  framework: string;
 }
 
-const Hello = ({
+const App = ({
   compiler,
   framework,
 }: HelloProps): JSX.Element => (
@@ -16,4 +17,4 @@ const Hello = ({
   </h1>
 );
 
-export default Hello;
+export default App;
