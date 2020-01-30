@@ -1,5 +1,6 @@
 const path = require('path');
 
+const DotenvWebpack = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -12,7 +13,7 @@ module.exports = {
     resolve: {
         extensions: [
             ".ts", ".tsx",
-            ".js", ".jsx"
+            ".js", ".jsx",
         ]
     },
     module: {
@@ -30,10 +31,9 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(png|svg|jpg|gif)$/,
-                use: [
-                    'file-loader',
-                ],
+                test: /\.(graphql)$/,
+                exclude: /node_modules/,
+                loader: 'graphql-tag/loader',
             },
             {
                 test: /\.scss$/,
@@ -42,12 +42,19 @@ module.exports = {
                     'css-loader',
                     'sass-loader'
                 ]
-            }
+            },
+            {
+                test: /\.(png|svg|jpg|gif)$/,
+                use: [
+                    'file-loader',
+                ],
+            },
         ]
     },
     plugins: [
         new HtmlWebpackPlugin({
             template: './src/assets/template.html'
-        })
+        }),
+        new DotenvWebpack()
     ]
 };
